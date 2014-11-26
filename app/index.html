@@ -1,0 +1,54 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Birds - By Rafael Ventura</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="images/cosmonaut.png">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+
+  </head>
+  <body>
+    <div class="websocketsInfo container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="users list-group"><div>Waiting for players... </div></div>
+                
+                <div class="btn btn-success start">START</div>
+                <div class="btn btn-info vsAI pull-right">VS AI</div>
+            </div>
+        </div>
+    </div>
+    <div class="waiting hidden">
+        Waiting for other player to accept...
+    </div>
+    <canvas id="canvas" class="hidden"></canvas>
+    
+    <!-- build:js(.) scripts/plugins.js -->
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+    <script src="bower_components/socket.io-client/socket.io.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/PxLoaderNoDependencies/PxLoader.js"></script>
+    <script src="bower_components/PxLoaderNoDependencies/PxLoaderImage.js"></script>
+    <!-- endbuild -->
+
+
+    <!-- build:js({app,.tmp}) scripts/main.js -->
+    <script src="bundle.js"></script>
+    <!-- endbuild -->
+    
+</body>
+</html>
