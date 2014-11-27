@@ -4,15 +4,16 @@ var entities = require('./models/entities');
 var utils = require('./utils');
 var enemies = [];
 
-function update(dt, players){
+function update(dt, player){
+
   enemies = _.compact(enemies.map(function(enemy){
     if(enemy.alive){
-      var playersNear = utils.kNearest(enemy, players, 2, enemy.sightRadius);
-      var playersCollide = utils.kNearest(enemy, players, 2, enemy.radius);
+      //var playersNear = utils.kNearest(enemy, [player], 2, enemy.sightRadius);
+      var playersCollide = utils.kNearest(enemy, [player], 2, enemy.radius);
+      var avoiding = 0, meanX, meanY, dx, dy;
 
-      var avoiding = 0, meanX,meanY, dx, dy;
       //Avoid near enemies
-      if(playersNear.length > 0){
+      /*if(playersNear.length > 0){
         meanX = utils.arrayMean(playersNear, function(b){return b.pos.x});
         meanY = utils.arrayMean(playersNear, function(b){return b.pos.y});
         dx = meanX - enemy.pos.x;
@@ -20,13 +21,13 @@ function update(dt, players){
         avoiding = (Math.atan2(dx, dy) * 180 / Math.PI) - enemy.angle;
         avoiding += 180;
       }
+      enemy.angle += avoiding;*/
 
       if(playersCollide.length > 0 ){
         enemy.alive = false;
-        players[0].points += enemy.points;
+        //player.points += enemy.points;
       }
 
-      enemy.angle += avoiding;
       enemy.update(dt);
       return enemy;
     }
@@ -40,8 +41,9 @@ function render(ctx, canvas){
 }
 
 function addEnemy(opts){
-  var myimage = new Image();
-  myimage.onload = function() {
+  var twitterImage = new Image();
+  
+  twitterImage.onload = function() {
      var enemyModel = new entities.enemyEntity({
       x: 0,
       y: 0,
@@ -51,13 +53,13 @@ function addEnemy(opts){
       angle: utils.random(0, 180),
       name: opts.name,
       text: opts.text,
-      image: myimage
+      image: twitterImage
     });
 
     enemies.push(enemyModel);
   }
-  myimage.src = opts.image;
- 
+  //Load the image
+  twitterImage.src = opts.image;
 }
 
 module.exports = {

@@ -3,22 +3,22 @@
 
 var assetsLoader = require('./assetsLoader');
 var clock = require('./components/clock');
-var settings = require('./settings');
 var player = require('./player');
 var enemiesController = require('./enemiesController');
 var playerBoxes = require('./components/players');
 var utils = require('./utils');
 
 
-var song, then, now, canvas,ctx, canvas2, ctx2, shown,  color, time, limit = 50, paused = false, maxTries = 30, tries = 0;
+var then, now, 
+  canvas, ctx,
+  canvas2, ctx2,
+  time, limit = 50, 
+  paused = false;
 
 
 function start(playersInfo){
   player.initialize(playersInfo[0]);
   playerBoxes.init([player.getEntity()]);
-  $('#canvas').on('touchstart click', function(){
-    startPause();
-  });
   time = 0.0;
   launchCanvas();
 }
@@ -27,10 +27,12 @@ function launchCanvas(){
   $('canvas').removeClass('hidden');
 
   then = Date.now();
+  
   canvas = document.getElementById('canvas');
   canvas.width = window.innerWidth //Or wathever
   canvas.height = window.innerHeight; //Or wathever
   ctx = canvas.getContext('2d');
+  
   canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth //Or wathever
   canvas2.height = window.innerHeight; //Or wathever
@@ -46,7 +48,7 @@ var loop = function loop(){
 
   if(!paused){
     clear();
-    update(dt);
+    update(dt/1000);
     render();
   }
 
@@ -54,23 +56,39 @@ var loop = function loop(){
 }
 
 function update(dt){
-  var newDt = dt/1000;
-  updateClock(newDt);
-  enemiesController.update(newDt, [player.getEntity()]);
-  player.update(newDt);
+  updateClock(dt);
+  enemiesController.update(dt, [player.getEntity()]);
+  player.update(dt);
 }
 
-
-function startPause(){
-  if(!paused){
-    tries++;
-  }
-
-  paused = !paused;
-
-  if(tries >= 3){
+function updateClock(dt){
+  time += dt;
+  if(time > limit){
     endGame();
   }
+}
+
+function clear(){
+  //Resize clears the canvas and is good when the window is gonna be resized
+  //But it's memory expensive
+  ctx.canvas.width = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+  ctx2.canvas.width = window.innerWidth;
+  ctx2.canvas.height = window.innerHeight;
+  ctx2.clearRect(0, 0, canvas.width, canvas.height);
+  
+  var gradient = ctx.createLinearGradient(canvas.width, canvas.height,0, 0);
+  gradient.addColorStop(0, "rgb(84, 141, 189)");
+  gradient.addColorStop(1, "rgb(99, 64, 113)");
+  ctx.fillStyle = gradient;    
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function render(){
+  clock.render(ctx2, time, canvas);
+  playerBoxes.render(ctx2, canvas);
+  player.render(ctx2);
+  enemiesController.render(ctx2,canvas);
 }
 
 function endGame(){
@@ -85,40 +103,6 @@ function endGame(){
   ctx.fillText(text, x, y); 
   paused = true;
 }
-
-function updateClock(dt){
-  time += dt;
-  if(time > limit){
-    endGame();
-  }
-}
-
-
-function clear(){
-
-  ctx.canvas.width = window.innerWidth;
-  ctx.canvas.height = window.innerHeight;
-  ctx2.canvas.width = window.innerWidth;
-  ctx2.canvas.height = window.innerHeight;
-  ctx2.clearRect(0, 0, canvas.width, canvas.height);
-  
-  
-  var gradient = ctx.createLinearGradient(canvas.width, canvas.height,0, 0);
- 
-  gradient.addColorStop(0, "rgb(84, 141, 189)");
-  gradient.addColorStop(1, "rgb(99, 64, 113)");
-  ctx.fillStyle = gradient;    
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-}
-
-function render(){
-  clock.render(ctx2, time, canvas);
-  playerBoxes.render(ctx2, canvas);
-  player.render(ctx2);
-  enemiesController.render(ctx2,canvas);
-}
-
 
 module.exports = {
   start: start

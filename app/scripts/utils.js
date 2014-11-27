@@ -19,6 +19,12 @@ function randomRGBColor(){
   return color;
 }
 
+function randomId() {
+  var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+  var uniqid = randLetter + Date.now();
+  return uniqid;
+}
+
 function flipCoin() {
     return (Math.floor(Math.random() * 2) == 0);
 }
@@ -37,30 +43,30 @@ function arrayMean (a1, extractor) {
 };
 
 function kNearest(a1, lst, k, maxDist) {
-    'use strict';
-    var result = [], tempDist = [], idx = 0, worstIdx = -1, dist, agent;
+  'use strict';
+  var result = [], tempDist = [], idx = 0, worstIdx = -1, dist, agent;
 
-    while (idx < lst.length) {
-        agent = lst[idx];
-        if (a1 !== agent) {
-            dist = a1.pos.distance(agent.pos);
-            if (dist < maxDist) {
-                if (result.length < k) {
-                    result.push(agent);
-                    tempDist.push(dist);
-                    worstIdx = tempDist.indexOf(_.max(tempDist));
-                } else {
-                    if (dist < tempDist[worstIdx]) {
-                        tempDist[worstIdx] = dist;
-                        result[worstIdx] = agent;
-                        worstIdx = tempDist.indexOf(_.max(tempDist));
-                    }
-                }
-            }
-        }
+  while (idx < lst.length) {
+      agent = lst[idx];
+      if (a1 !== agent) {
+          dist = a1.pos.distance(agent.pos);
+          if (dist < maxDist) {
+              if (result.length < k) {
+                  result.push(agent);
+                  tempDist.push(dist);
+                  worstIdx = tempDist.indexOf(_.max(tempDist));
+              } else {
+                  if (dist < tempDist[worstIdx]) {
+                      tempDist[worstIdx] = dist;
+                      result[worstIdx] = agent;
+                      worstIdx = tempDist.indexOf(_.max(tempDist));
+                  }
+              }
+          }
+      }
 
-        idx += 1;
-    }
+      idx += 1;
+  }
 
     return result;
 };
@@ -71,5 +77,6 @@ module.exports = {
   randomRGBColor: randomRGBColor,
   flipCoin: flipCoin,
   arrayMean: arrayMean,
-  kNearest: kNearest
+  kNearest: kNearest,
+  randomId: randomId
 }
