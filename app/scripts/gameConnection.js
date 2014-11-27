@@ -45,7 +45,7 @@ function init(){
   socket.emit('user_connected', playerInfo);
 
   //Push enemy
-  socket.on('enemy_connected', function(enemy){
+  socket.on('new_enemy', function(enemy){
     console.log('new enemy connected');
     enemiesController.addEnemy(enemy);
   });

@@ -1,0 +1,189 @@
+{
+    "created_at": "Thu Nov 27 08:50:54 +0000 2014",
+    "id": 537891301635526660,
+    "id_str": "537891301635526656",
+    "text": "RT @612brisbane: Full list of bus routes affected due to #bnestorm #storm @TransLinkSEQ #transport http://t.co/yQBduqkDZb http://t.co/ePHHn…",
+    "source": "<a href=\"https://about.twitter.com/products/tweetdeck\" rel=\"nofollow\">TweetDeck</a>",
+    "truncated": false,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "in_reply_to_screen_name": null,
+    "user": {
+        "id": 20302207,
+        "id_str": "20302207",
+        "name": "Annie",
+        "screen_name": "Annieb25",
+        "location": "Brisbane, Australia",
+        "url": "http://www.lifeanddandelions.com",
+        "description": "ABC Breakfast Radio producer, presenter whisperer. When I'm not working I'm a wife, mum, writer, researcher, anxiety warrior. Views here mine, all mine.",
+        "protected": false,
+        "verified": false,
+        "followers_count": 3606,
+        "friends_count": 3559,
+        "listed_count": 163,
+        "favourites_count": 238,
+        "statuses_count": 57134,
+        "created_at": "Sat Feb 07 10:05:06 +0000 2009",
+        "utc_offset": -21600,
+        "time_zone": "Central Time (US & Canada)",
+        "geo_enabled": true,
+        "lang": "en",
+        "contributors_enabled": false,
+        "is_translator": false,
+        "profile_background_color": "BCC7A7",
+        "profile_background_image_url": "http://pbs.twimg.com/profile_background_images/156243471/x993fa5b57ca1d5c9a33a10ce63b6efd.png",
+        "profile_background_image_url_https": "https://pbs.twimg.com/profile_background_images/156243471/x993fa5b57ca1d5c9a33a10ce63b6efd.png",
+        "profile_background_tile": true,
+        "profile_link_color": "5D8F7D",
+        "profile_sidebar_border_color": "912626",
+        "profile_sidebar_fill_color": "784035",
+        "profile_text_color": "82B3A7",
+        "profile_use_background_image": true,
+        "profile_image_url": "http://pbs.twimg.com/profile_images/440088904138387456/ehB6LPm6_normal.jpeg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/440088904138387456/ehB6LPm6_normal.jpeg",
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null
+    },
+    "geo": null,
+    "coordinates": null,
+    "place": null,
+    "contributors": null,
+    "retweeted_status": {
+        "created_at": "Thu Nov 27 08:50:05 +0000 2014",
+        "id": 537891097645572100,
+        "id_str": "537891097645572096",
+        "text": "Full list of bus routes affected due to #bnestorm #storm @TransLinkSEQ #transport http://t.co/yQBduqkDZb http://t.co/ePHHnphbRP",
+        "source": "<a href=\"https://about.twitter.com/products/tweetdeck\" rel=\"nofollow\">TweetDeck</a>",
+        "truncated": false,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 16213124,
+            "id_str": "16213124",
+            "name": "ABC Radio Brisbane ",
+            "screen_name": "612brisbane",
+            "location": "Brisbane, Australia",
+            "url": "http://www.abc.net.au/brisbane",
+            "description": "ABC Local Radio Brisbane. 612 on the AM Band. Listen here: http://612live.com\nTalkback number: 1300 222 612 \n                    SMS: 0467 922 612",
+            "protected": false,
+            "verified": true,
+            "followers_count": 47348,
+            "friends_count": 39511,
+            "listed_count": 1088,
+            "favourites_count": 726,
+            "statuses_count": 86033,
+            "created_at": "Tue Sep 09 23:19:47 +0000 2008",
+            "utc_offset": 36000,
+            "time_zone": "Brisbane",
+            "geo_enabled": true,
+            "lang": "en",
+            "contributors_enabled": false,
+            "is_translator": false,
+            "profile_background_color": "4269A3",
+            "profile_background_image_url": "http://pbs.twimg.com/profile_background_images/71778659/612-Twitter-BGD-Local-City.jpg",
+            "profile_background_image_url_https": "https://pbs.twimg.com/profile_background_images/71778659/612-Twitter-BGD-Local-City.jpg",
+            "profile_background_tile": true,
+            "profile_link_color": "BB373B",
+            "profile_sidebar_border_color": "283856",
+            "profile_sidebar_fill_color": "ECE6CF",
+            "profile_text_color": "283856",
+            "profile_use_background_image": true,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/423295917819576320/XkIcxw4v_normal.jpeg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/423295917819576320/XkIcxw4v_normal.jpeg",
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/16213124/1416875248",
+            "default_profile": false,
+            "default_profile_image": false,
+            "following": null,
+            "follow_request_sent": null,
+            "notifications": null
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "retweet_count": 1,
+        "favorite_count": 0,
+        "entities": {
+            "hashtags": [
+                null
+            ],
+            "trends": [],
+            "urls": [
+                null
+            ],
+            "user_mentions": [
+                null
+            ],
+            "symbols": [],
+            "media": [
+                null
+            ]
+        },
+        "extended_entities": {
+            "media": [
+                null
+            ]
+        },
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "filter_level": "low",
+        "lang": "en"
+    },
+    "retweet_count": 0,
+    "favorite_count": 0,
+    "entities": {
+        "hashtags": [
+            [
+                null
+            ],
+            [
+                null
+            ],
+            [
+                null
+            ]
+        ],
+        "trends": [],
+        "urls": [
+            [
+                null
+            ]
+        ],
+        "user_mentions": [
+            [
+                null
+            ],
+            [
+                null
+            ]
+        ],
+        "symbols": [],
+        "media": [
+            [
+                null
+            ]
+        ]
+    },
+    "extended_entities": {
+        "media": [
+            [
+                null
+            ]
+        ]
+    },
+    "favorited": false,
+    "retweeted": false,
+    "possibly_sensitive": false,
+    "filter_level": "medium",
+    "lang": "en",
+    "timestamp_ms": "1417078254504"
+}

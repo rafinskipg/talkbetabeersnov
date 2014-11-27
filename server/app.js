@@ -46,6 +46,7 @@ io.on('connection', function(socket){
   socket.on('request_play_AI', function(player){
     createVSAIGame(player);
     twitter.linkToTwitter(function(tweet){
+      console.log('new enemy incoming...!');
       socket.emit('new_enemy', tweet);
     })
   });
