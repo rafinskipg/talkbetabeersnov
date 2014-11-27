@@ -3,14 +3,15 @@ var input = require('./input');
 
 var player;
 
-function initialize(){
+function initialize(opts){
   player = new Player({
     x: window.innerWidth / 2,
     y:  100,
     speedX : 10,
     speedY : 10,
     angle: 90,
-    maxSpeed: 200
+    maxSpeed: 200,
+    name : opts.name
   });
 }
 
@@ -60,13 +61,12 @@ function update(dt){
 }
 
 function render(ctx){
-  if(window.SETTINGS.debugging.value == 1){
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(42, 250, 33, 0.50)';
-    ctx.arc(player.pos.x, player.pos.y, 30 , Math.PI*2, false);
-    ctx.stroke();
-  }
-  
+  //Render circle
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(42, 250, 33, 0.50)';
+  ctx.arc(player.pos.x, player.pos.y, 30 , Math.PI*2, false);
+  ctx.stroke();
+
   player.render(ctx);
 }
 

@@ -10,12 +10,12 @@ var playerBoxes = require('./components/players');
 var utils = require('./utils');
 
 
-var song, then, now, canvas,ctx, shown,  color, time, limit = 30, paused = false, maxTries = 30, tries = 0;
+var song, then, now, canvas,ctx, canvas2, ctx2, shown,  color, time, limit = 50, paused = false, maxTries = 30, tries = 0;
 
 
 function start(playersInfo){
-  playerBoxes.init(playersInfo);
-  player.initialize();
+  player.initialize(playersInfo[0]);
+  playerBoxes.init([player.getEntity()]);
   $('#canvas').on('touchstart click', function(){
     startPause();
   });
@@ -24,13 +24,17 @@ function start(playersInfo){
 }
 
 function launchCanvas(){
-  $('#canvas').removeClass('hidden');
+  $('canvas').removeClass('hidden');
 
   then = Date.now();
   canvas = document.getElementById('canvas');
   canvas.width = window.innerWidth //Or wathever
   canvas.height = window.innerHeight; //Or wathever
   ctx = canvas.getContext('2d');
+  canvas2 = document.getElementById('canvas2');
+  canvas2.width = window.innerWidth //Or wathever
+  canvas2.height = window.innerHeight; //Or wathever
+  ctx2 = canvas2.getContext('2d');
   
   loop();
 }
@@ -52,7 +56,7 @@ var loop = function loop(){
 function update(dt){
   var newDt = dt/1000;
   updateClock(newDt);
-  enemiesController.update(newDt);
+  enemiesController.update(newDt, [player.getEntity()]);
   player.update(newDt);
 }
 
@@ -79,15 +83,7 @@ function endGame(){
   var x = (canvas.width - dim.width) / 2;
 
   ctx.fillText(text, x, y); 
-
-  var text2 = 'goals';
-
-  ctx.font = 'bold ' + canvas.width / 20 + 'px sans-serif';
-  var dim2 = ctx.measureText(text2);
-  var y2 = ((canvas.height - 30 ) / 2  ) +  40;
-  var x2 = (canvas.width - dim2.width) / 2;
-
-  ctx.fillText(text2, x2, y2);
+  paused = true;
 }
 
 function updateClock(dt){
@@ -99,26 +95,28 @@ function updateClock(dt){
 
 
 function clear(){
- // ctx.globalCompositeOperation = "source-over";
+
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
+  ctx2.canvas.width = window.innerWidth;
+  ctx2.canvas.height = window.innerHeight;
+  ctx2.clearRect(0, 0, canvas.width, canvas.height);
+  
   
   var gradient = ctx.createLinearGradient(canvas.width, canvas.height,0, 0);
  
   gradient.addColorStop(0, "rgb(84, 141, 189)");
   gradient.addColorStop(1, "rgb(99, 64, 113)");
-  ctx.fillStyle = gradient;
-    
+  ctx.fillStyle = gradient;    
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = "lighter";
 
 }
 
 function render(){
-  clock.render(ctx, time, canvas);
-  playerBoxes.render(ctx, canvas);
-  player.render(ctx);
-  enemiesController.render(ctx,canvas);
+  clock.render(ctx2, time, canvas);
+  playerBoxes.render(ctx2, canvas);
+  player.render(ctx2);
+  enemiesController.render(ctx2,canvas);
 }
 
 

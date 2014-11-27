@@ -7,7 +7,7 @@ var T = new Twit({
   , access_token_secret:  'UcOU1qSq3ChF5tgyAKPmdeGInVNrQXPi1KestjsxznyPH'
 })
 
-var hashtag = 'bnestorm';
+var hashtag = 'business';
 
 function linkToTwitter(fn){
   var stream = T.stream('statuses/filter', { track: '#'+hashtag })

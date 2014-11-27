@@ -1,22 +1,25 @@
 var entity = require('./entity');
 var sprite = require('../sprite');
+var assetsLoader = require('../assetsLoader');
 var Victor = require('victor');
 
 function Player(opts){
   entity.prototype.constructor.call(this, opts);
   this.mass = opts.mass || 1;
   this.angle = opts.angle || 0;
+  this.name = opts.name;
+  this.points = 0;
   this.radius = opts.radius || 5;
   this.life = opts.life || 200;
   this.remaining_life = this.life;
   this.maxSpeed = opts.maxSpeed || 200;
-  this.sprite = new sprite(window.playerImage);
-  this.sprite.addAnimation('flap', [0,1,2,1,0,1,2,3,4,5], [10,10], 1000);
+  this.sprite = new sprite(assetsLoader.getImage('playerSprite'));
+  this.sprite.addAnimation('flap', [0,1,2,1,0,1,2], [160,200], 1000);
   this.sprite.playAnimation('flap');
 }
 
 Player.prototype.render = function(ctx){
-  this.sprite.render(ctx, this.pos.x, this.pos.y, 30, 30, this.angle);
+  this.sprite.render(ctx, this.pos.x, this.pos.y, 50, 50, this.angle);
 }
 
 Player.prototype.update = function(dt){

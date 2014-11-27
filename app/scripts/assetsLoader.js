@@ -20,6 +20,7 @@ function initLoader(){
 module.exports = {
   init: initLoader,
   addImage: addImage,
+  getImage: getImage,
 	onLoadComplete: onLoadComplete,
 	load: function () {
     loader.start();

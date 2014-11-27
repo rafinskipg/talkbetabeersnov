@@ -1,4 +1,5 @@
 var Victor = require('victor');
+var sprite = require('../sprite');
 var utils = require('../utils');
 var entity = require('./entity');
 
@@ -15,10 +16,13 @@ function enemyEntity(opts){
   this.angle = opts.angle || 0;
   this.destinyAngle = this.angle;
   this.radius = opts.radius || 10;
+  this.name = '@'+opts.name;
+  this.image = opts.image;
+  this.text = opts.text;
 
-  /*this.sprite = new sprite(opts.image);
-  this.sprite.addAnimation('standby', [0], [10,10], 5);
-  this.sprite.playAnimation('standby');*/
+  this.sprite = new sprite(opts.image);
+  this.sprite.addAnimation('standby', [0], [opts.image.width, opts.image.height], 5);
+  this.sprite.playAnimation('standby');
 
   this.sightRadius = utils.random(10, 200);
 }
@@ -33,13 +37,30 @@ enemyEntity.prototype.render = function(ctx){
   ctx.beginPath();
   ctx.fillStyle = 'rgba(33, 42, 250, 0.20)';
   ctx.arc(this.pos.x, this.pos.y, this.sightRadius, Math.PI*2, false);
-  ctx.fill();
+  ctx.stroke();
 
   ctx.beginPath();
-  ctx.fillStyle = 'rgba(33, 42, 250, 1)';
+  ctx.fillStyle = 'rgba(33, 42, 250, 0.4)';
   ctx.arc(this.pos.x, this.pos.y, this.radius, Math.PI*2, false);
+  ctx.stroke();
+  
+  //Render image
+  this.sprite.render(ctx, this.pos.x, this.pos.y, this.radius, this.radius, this.angle);
+
+  ctx.font = 'bold 15px sans-serif';
+  var dim = ctx.measureText(this.name);
+  //Name bg
+  ctx.beginPath();
+  ctx.rect(this.pos.x - dim.width / 2 -10, this.pos.y + 30, dim.width + 20,  20);
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
   ctx.fill();
-  //this.sprite.render(ctx, this.pos.x, this.pos.y, 20, 20, this.angle);
+  ctx.closePath();
+
+  //Twitter name
+  ctx.beginPath();
+  ctx.fillStyle = 'white';
+  ctx.fillText(this.name,this.pos.x - dim.width / 2, this.pos.y + 40);
+  ctx.closePath();
 
 }
 
@@ -58,8 +79,7 @@ enemyEntity.prototype.update = function(dt){
     //this.speed.rotateDeg(this.angle);
   }
   
-  var speedDt = new Victor(this.getSpeed(), this.getSpeed()).multiply(new Victor(dt, dt)).rotateDeg(this.angle);
-  
+  var speedDt = new Victor(this.speed.x, this.speed.y).multiply(new Victor(dt, dt)).rotateDeg(this.angle);  
   this.pos = this.pos.add(speedDt);
 
   //Check borders

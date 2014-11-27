@@ -16,7 +16,7 @@ function render(ctx, time, canvas){
   var dim = ctx.measureText(text);
   var y = (canvas.height - 30) / 2;
   var x = (canvas.width - dim.width) / 2;
-
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
   ctx.fillText(text, x, y);   
 }
 
