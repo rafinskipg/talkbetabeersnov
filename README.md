@@ -1,4 +1,4 @@
-# CASIO
+# BBMAD demo
 
 ## installing
 
@@ -13,3 +13,8 @@ bower install
 node server/app.js
 grunt serve
 ```
+
+## Slides
+
+http://slides.com/rafinskipg/los-require-de-mi-build#/
+
