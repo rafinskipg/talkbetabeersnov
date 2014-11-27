@@ -45,10 +45,10 @@ function init(){
   socket.emit('user_connected', playerInfo);
 
   //Push enemy
-  socket.on('new_enemy', function(enemy){
+  /*socket.on('new_enemy', function(enemy){
     console.log('new enemy connected');
     enemiesController.addEnemy(enemy);
-  });
+  });*/
 
 }
 
@@ -107,8 +107,6 @@ function generateRandomId(){
   var uniqid = randLetter + Date.now();
   return uniqid;
 }
-
-
 
 module.exports = {
   init: init
