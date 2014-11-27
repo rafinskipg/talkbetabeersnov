@@ -1,5 +1,5 @@
 'use strict';
-var canvas = require('./canvas');
+var core = require('./core');
 var utils = require('./utils');
 var enemiesController = require('./enemiesController');
 var randomNameGenerator = require('./components/randomNameGenerator');
@@ -22,7 +22,7 @@ function init(){
     gameIdentificator = game.id;
     $('.waiting').addClass('hidden');
     $('.websocketsInfo').addClass('hidden');
-    canvas.start(game.players);
+    core.start(game.players);
   });
 
   //Render user list
