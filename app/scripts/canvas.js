@@ -4,6 +4,8 @@
 var assetsLoader = require('./assetsLoader');
 var clock = require('./components/clock');
 var settings = require('./settings');
+var player = require('./player');
+var enemiesController = require('./enemiesController');
 var playerBoxes = require('./components/players');
 var utils = require('./utils');
 
@@ -13,6 +15,7 @@ var song, then, now, canvas,ctx, shown,  color, time, limit = 30, paused = false
 
 function start(playersInfo){
   playerBoxes.init(playersInfo);
+  player.initialize();
   $('#canvas').on('touchstart click', function(){
     startPause();
   });
@@ -49,6 +52,8 @@ var loop = function loop(){
 function update(dt){
   var newDt = dt/1000;
   updateClock(newDt);
+  enemiesController.update(newDt);
+  player.update(newDt);
 }
 
 
@@ -92,6 +97,7 @@ function updateClock(dt){
   }
 }
 
+
 function clear(){
  // ctx.globalCompositeOperation = "source-over";
   ctx.canvas.width = window.innerWidth;
@@ -111,6 +117,8 @@ function clear(){
 function render(){
   clock.render(ctx, time, canvas);
   playerBoxes.render(ctx, canvas);
+  player.render(ctx);
+  enemiesController.render(ctx,canvas);
 }
 
 

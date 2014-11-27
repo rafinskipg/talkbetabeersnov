@@ -1,6 +1,7 @@
 'use strict';
 var canvas = require('./canvas');
 var utils = require('./utils');
+var enemiesController = require('./enemiesController');
 var socket, gameIdentificator, playerInfo;
 
 
@@ -42,6 +43,12 @@ function init(){
 
   //Emit connected
   socket.emit('user_connected', playerInfo);
+
+  //Push enemy
+  socket.on('enemy_connected', function(enemy){
+    console.log('new enemy connected');
+    enemiesController.addEnemy(enemy);
+  });
 
 }
 

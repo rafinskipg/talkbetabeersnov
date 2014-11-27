@@ -1,4 +1,4 @@
-var loader = new PxLoader();
+var loader;
 var images = {};
 
 function onLoadComplete(fn){
@@ -13,9 +13,15 @@ function getImage(alias){
 	return images[alias];
 }
 
+function initLoader(){
+  loader = new PxLoader(); 
+}
+
 module.exports = {
-	addImage: addImage,
-	getImage: getImage,
+  init: initLoader,
+  addImage: addImage,
 	onLoadComplete: onLoadComplete,
-	start: loader.start
+	load: function () {
+    loader.start();
+  }
 }
