@@ -57,7 +57,7 @@ var loop = function loop(){
 
 function update(dt){
   updateClock(dt);
-  enemiesController.update(dt, [player.getEntity()]);
+  enemiesController.update(dt, player.getEntity());
   player.update(dt);
 }
 

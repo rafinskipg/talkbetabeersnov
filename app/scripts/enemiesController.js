@@ -24,7 +24,7 @@ function update(dt, player){
       enemy.angle += avoiding;*/
 
       if(playersCollide.length > 0 ){
-        enemy.alive = false;
+        //enemy.alive = false;
         //player.points += enemy.points;
       }
 

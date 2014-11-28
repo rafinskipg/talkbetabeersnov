@@ -42,9 +42,9 @@ var titles = [
 ]
 
 module.exports = function generate(){
-  var indexTitle = utils.random(0, titles.length -1);
-  var indexName = utils.random(0, names.length -1);
-  var indexSurName = utils.random(0, surnames.length -1);
+  var indexTitle = _.random(0, titles.length -1);
+  var indexName = _.random(0, names.length -1);
+  var indexSurName = _.random(0, surnames.length -1);
 
   return titles[indexTitle] + ' ' + names[indexName] + ' ' + surnames[indexSurName];
 }

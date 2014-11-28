@@ -28,150 +28,26 @@ module.exports = {
   }
 }
 },{}],2:[function(require,module,exports){
-/** YEAH **/
-'use strict';
-
-var assetsLoader = require('./assetsLoader');
-var clock = require('./components/clock');
-var settings = require('./settings');
-var player = require('./player');
-var enemiesController = require('./enemiesController');
-var playerBoxes = require('./components/players');
-var utils = require('./utils');
-
-
-var song, then, now, canvas,ctx, canvas2, ctx2, shown,  color, time, limit = 50, paused = false, maxTries = 30, tries = 0;
-
-
-function start(playersInfo){
-  player.initialize(playersInfo[0]);
-  playerBoxes.init([player.getEntity()]);
-  $('#canvas').on('touchstart click', function(){
-    startPause();
-  });
-  time = 0.0;
-  launchCanvas();
-}
-
-function launchCanvas(){
-  $('canvas').removeClass('hidden');
-
-  then = Date.now();
-  canvas = document.getElementById('canvas');
-  canvas.width = window.innerWidth //Or wathever
-  canvas.height = window.innerHeight; //Or wathever
-  ctx = canvas.getContext('2d');
-  canvas2 = document.getElementById('canvas2');
-  canvas2.width = window.innerWidth //Or wathever
-  canvas2.height = window.innerHeight; //Or wathever
-  ctx2 = canvas2.getContext('2d');
-  
-  loop();
-}
-
-var loop = function loop(){
-  now = Date.now();
-  var dt = now - then;
-  then = now;
-
-  if(!paused){
-    clear();
-    update(dt);
-    render();
-  }
-
-  requestAnimationFrame(loop);
-}
-
-function update(dt){
-  var newDt = dt/1000;
-  updateClock(newDt);
-  enemiesController.update(newDt, [player.getEntity()]);
-  player.update(newDt);
-}
-
-
-function startPause(){
-  if(!paused){
-    tries++;
-  }
-
-  paused = !paused;
-
-  if(tries >= 3){
-    endGame();
-  }
-}
-
-function endGame(){
-  canvas.width = canvas.width;
-  var text = 'GAME OVER';
-
-  ctx.font = 'bold ' + canvas.width / 10 + 'px sans-serif';
-  var dim = ctx.measureText(text);
-  var y = (canvas.height - 30) / 2;
-  var x = (canvas.width - dim.width) / 2;
-
-  ctx.fillText(text, x, y); 
-  paused = true;
-}
-
-function updateClock(dt){
-  time += dt;
-  if(time > limit){
-    endGame();
-  }
-}
-
-
-function clear(){
-
-  ctx.canvas.width = window.innerWidth;
-  ctx.canvas.height = window.innerHeight;
-  ctx2.canvas.width = window.innerWidth;
-  ctx2.canvas.height = window.innerHeight;
-  ctx2.clearRect(0, 0, canvas.width, canvas.height);
-  
-  
-  var gradient = ctx.createLinearGradient(canvas.width, canvas.height,0, 0);
- 
-  gradient.addColorStop(0, "rgb(84, 141, 189)");
-  gradient.addColorStop(1, "rgb(99, 64, 113)");
-  ctx.fillStyle = gradient;    
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-}
-
-function render(){
-  clock.render(ctx2, time, canvas);
-  playerBoxes.render(ctx2, canvas);
-  player.render(ctx2);
-  enemiesController.render(ctx2,canvas);
-}
-
-
-module.exports = {
-  start: start
-}
-},{"./assetsLoader":1,"./components/clock":3,"./components/players":4,"./enemiesController":5,"./player":16,"./settings":17,"./utils":19}],3:[function(require,module,exports){
 'use strict';
 
 function render(ctx, time, canvas){
   var miliseconds = parseInt(time * 1000, 10);
-  
   var seconds = Math.round(miliseconds/ 1000);
-  seconds =(seconds+'').length < 2  ? '0'+seconds : seconds;
   var centesimas = (miliseconds+'').substr(2,4);
-  centesimas = centesimas.length < 2  ? '0'+centesimas : centesimas;
   var minutes = Math.floor(seconds / 60);
+  
+  seconds =(seconds+'').length < 2  ? '0'+seconds : seconds;
+  centesimas = centesimas.length < 2  ? '0'+centesimas : centesimas;
   minutes =(minutes+'').length < 2  ? '0'+minutes : minutes;
 
   var text = minutes + ':'+ seconds +':'+centesimas;
 
   ctx.font = 'bold ' + canvas.width / 10 + 'px sans-serif';
+  
   var dim = ctx.measureText(text);
   var y = (canvas.height - 30) / 2;
   var x = (canvas.width - dim.width) / 2;
+  
   ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
   ctx.fillText(text, x, y);   
 }
@@ -180,7 +56,7 @@ function render(ctx, time, canvas){
 module.exports = {
   render: render
 }
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var players;
@@ -230,129 +106,8 @@ module.exports = {
   update: update,
   init : init
 }
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
-
-var entities = require('./models/entities');
-var utils = require('./utils');
-var enemies = [];
-
-function update(dt, players){
-  enemies = _.compact(enemies.map(function(enemy){
-    if(enemy.alive){
-      var playersNear = utils.kNearest(enemy, players, 2, enemy.sightRadius);
-      var playersCollide = utils.kNearest(enemy, players, 2, enemy.radius);
-
-      var avoiding = 0, meanX,meanY, dx, dy;
-      //Avoid near enemies
-      if(playersNear.length > 0){
-        meanX = utils.arrayMean(playersNear, function(b){return b.pos.x});
-        meanY = utils.arrayMean(playersNear, function(b){return b.pos.y});
-        dx = meanX - enemy.pos.x;
-        dy = meanY - enemy.pos.y;
-        avoiding = (Math.atan2(dx, dy) * 180 / Math.PI) - enemy.angle;
-        avoiding += 180;
-      }
-
-      if(playersCollide.length > 0 ){
-        enemy.alive = false;
-        players[0].points += enemy.points;
-      }
-
-      enemy.angle += avoiding;
-      enemy.update(dt);
-      return enemy;
-    }
-  }));
-}
-
-function render(ctx, canvas){
-  for(var i = 0; i < enemies.length; i++){
-    enemies[i].render(ctx,canvas);
-  }
-}
-
-function addEnemy(opts){
-  var myimage = new Image();
-  myimage.onload = function() {
-     var enemyModel = new entities.enemyEntity({
-      x: 0,
-      y: 0,
-      speed: utils.random(60,100),
-      points : utils.random(10,100),
-      radius: utils.random(40,80),
-      angle: utils.random(0, 180),
-      name: opts.name,
-      text: opts.text,
-      image: myimage
-    });
-
-    enemies.push(enemyModel);
-  }
-  myimage.src = opts.image;
- 
-}
-
-module.exports = {
-  addEnemy: addEnemy,
-  update: update,
-  render: render
-}
-},{"./models/entities":11,"./utils":19}],6:[function(require,module,exports){
-'use strict';
-var canvas = require('./canvas');
-var utils = require('./utils');
-var enemiesController = require('./enemiesController');
-var socket, gameIdentificator, playerInfo;
-
-
-function init(){
-  playerInfo = { name : generateRandomName(), id: generateRandomId() };
-
-  socket = io('http://127.0.0.1:3000');
-
-  //Render user list
-  socket.on('refresh_user_list', function(users){
-    var content = $('<div ></div>');
-    users.forEach(function(user){
-      content.append('<div class="list-group-item">'+ user.name + '</div>');
-    })
-    $('.users').html(content);
-  });
-
-  //Request play vs AI
-  $('.vsAI').on('click', function(){
-    $('.waiting').removeClass('hidden');
-    socket.emit('request_play_AI', playerInfo);
-  });
-
-
-  //Request play on click
-  $('.start').on('click', function(){
-    $('.waiting').removeClass('hidden');
-    socket.emit('request_play', playerInfo);
-  });
-
-  //Start game
-  socket.on('start_game', function(game){
-    gameIdentificator = game.id;
-    $('.waiting').addClass('hidden');
-    $('.websocketsInfo').addClass('hidden');
-    canvas.start(game.players);
-  });
-
-
-  //Emit connected
-  socket.emit('user_connected', playerInfo);
-
-  //Push enemy
-  /*socket.on('new_enemy', function(enemy){
-    console.log('new enemy connected');
-    enemiesController.addEnemy(enemy);
-  });*/
-
-}
-
 
 var surnames = [
   'der Strauttenn',
@@ -395,24 +150,246 @@ var titles = [
   'Doña'
 ]
 
-function generateRandomName(){
-  var indexTitle = utils.random(0, titles.length -1);
-  var indexName = utils.random(0, names.length -1);
-  var indexSurName = utils.random(0, surnames.length -1);
+module.exports = function generate(){
+  var indexTitle = _.random(0, titles.length -1);
+  var indexName = _.random(0, names.length -1);
+  var indexSurName = _.random(0, surnames.length -1);
 
   return titles[indexTitle] + ' ' + names[indexName] + ' ' + surnames[indexSurName];
 }
+},{}],5:[function(require,module,exports){
+/** YEAH **/
+'use strict';
 
-function generateRandomId(){
-  var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-  var uniqid = randLetter + Date.now();
-  return uniqid;
+var assetsLoader = require('./assetsLoader');
+var clock = require('./components/clock');
+var player = require('./player');
+var enemiesController = require('./enemiesController');
+var playerBoxes = require('./components/players');
+var utils = require('./utils');
+
+
+var then, now, 
+  canvas, ctx,
+  canvas2, ctx2,
+  time, limit = 50, 
+  paused = false;
+
+
+function start(playersInfo){
+  player.initialize(playersInfo[0]);
+  playerBoxes.init([player.getEntity()]);
+  time = 0.0;
+  launchCanvas();
 }
+
+function launchCanvas(){
+  $('canvas').removeClass('hidden');
+
+  then = Date.now();
+  
+  canvas = document.getElementById('canvas');
+  canvas.width = window.innerWidth //Or wathever
+  canvas.height = window.innerHeight; //Or wathever
+  ctx = canvas.getContext('2d');
+  
+  canvas2 = document.getElementById('canvas2');
+  canvas2.width = window.innerWidth //Or wathever
+  canvas2.height = window.innerHeight; //Or wathever
+  ctx2 = canvas2.getContext('2d');
+  
+  loop();
+}
+
+var loop = function loop(){
+  now = Date.now();
+  var dt = now - then;
+  then = now;
+
+  if(!paused){
+    clear();
+    update(dt/1000);
+    render();
+  }
+
+  requestAnimationFrame(loop);
+}
+
+function update(dt){
+  updateClock(dt);
+  enemiesController.update(dt, player.getEntity());
+  player.update(dt);
+}
+
+function updateClock(dt){
+  time += dt;
+  if(time > limit){
+    endGame();
+  }
+}
+
+function clear(){
+  //Resize clears the canvas and is good when the window is gonna be resized
+  //But it's memory expensive
+  ctx.canvas.width = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+  ctx2.canvas.width = window.innerWidth;
+  ctx2.canvas.height = window.innerHeight;
+  ctx2.clearRect(0, 0, canvas.width, canvas.height);
+  
+  var gradient = ctx.createLinearGradient(canvas.width, canvas.height,0, 0);
+  gradient.addColorStop(0, "rgb(84, 141, 189)");
+  gradient.addColorStop(1, "rgb(99, 64, 113)");
+  ctx.fillStyle = gradient;    
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function render(){
+  clock.render(ctx2, time, canvas);
+  playerBoxes.render(ctx2, canvas);
+  player.render(ctx2);
+  enemiesController.render(ctx2,canvas);
+}
+
+function endGame(){
+  canvas.width = canvas.width;
+  var text = 'GAME OVER';
+
+  ctx.font = 'bold ' + canvas.width / 10 + 'px sans-serif';
+  var dim = ctx.measureText(text);
+  var y = (canvas.height - 30) / 2;
+  var x = (canvas.width - dim.width) / 2;
+
+  ctx.fillText(text, x, y); 
+  paused = true;
+}
+
+module.exports = {
+  start: start
+}
+},{"./assetsLoader":1,"./components/clock":2,"./components/players":3,"./enemiesController":6,"./player":17,"./utils":19}],6:[function(require,module,exports){
+'use strict';
+
+var entities = require('./models/entities');
+var utils = require('./utils');
+var enemies = [];
+
+function update(dt, player){
+
+  enemies = _.compact(enemies.map(function(enemy){
+    if(enemy.alive){
+      //var playersNear = utils.kNearest(enemy, [player], 2, enemy.sightRadius);
+      var playersCollide = utils.kNearest(enemy, [player], 2, enemy.radius);
+      var avoiding = 0, meanX, meanY, dx, dy;
+
+      //Avoid near enemies
+      /*if(playersNear.length > 0){
+        meanX = utils.arrayMean(playersNear, function(b){return b.pos.x});
+        meanY = utils.arrayMean(playersNear, function(b){return b.pos.y});
+        dx = meanX - enemy.pos.x;
+        dy = meanY - enemy.pos.y;
+        avoiding = (Math.atan2(dx, dy) * 180 / Math.PI) - enemy.angle;
+        avoiding += 180;
+      }
+      enemy.angle += avoiding;*/
+
+      if(playersCollide.length > 0 ){
+        //enemy.alive = false;
+        //player.points += enemy.points;
+      }
+
+      enemy.update(dt);
+      return enemy;
+    }
+  }));
+}
+
+function render(ctx, canvas){
+  for(var i = 0; i < enemies.length; i++){
+    enemies[i].render(ctx,canvas);
+  }
+}
+
+function addEnemy(opts){
+  var twitterImage = new Image();
+  
+  twitterImage.onload = function() {
+     var enemyModel = new entities.enemyEntity({
+      x: 0,
+      y: 0,
+      speed: utils.random(60,100),
+      points : utils.random(10,100),
+      radius: utils.random(40,80),
+      angle: utils.random(0, 180),
+      name: opts.name,
+      text: opts.text,
+      image: twitterImage
+    });
+
+    enemies.push(enemyModel);
+  }
+  //Load the image
+  twitterImage.src = opts.image;
+}
+
+module.exports = {
+  addEnemy: addEnemy,
+  update: update,
+  render: render
+}
+},{"./models/entities":12,"./utils":19}],7:[function(require,module,exports){
+'use strict';
+var core = require('./core');
+var utils = require('./utils');
+var enemiesController = require('./enemiesController');
+var randomNameGenerator = require('./components/randomNameGenerator');
+var socket, gameIdentificator, playerInfo;
+
+
+function init(){
+  playerInfo = { name : randomNameGenerator(), id: utils.randomId() };
+
+  socket = io('http://127.0.0.1:3000');
+
+  //Request play vs AI
+  $('.vsAI').on('click', function(){
+    $('.waiting').removeClass('hidden');
+    socket.emit('request_play_AI', playerInfo);
+  });
+
+  //Start game
+  socket.on('start_game', function(game){
+    gameIdentificator = game.id;
+    $('.waiting').addClass('hidden');
+    $('.websocketsInfo').addClass('hidden');
+    core.start(game.players);
+  });
+
+  //Render user list
+  socket.on('refresh_user_list', function(users){
+    var content = $('<div ></div>');
+    users.forEach(function(user){
+      content.append('<div class="list-group-item">'+ user.name + '</div>');
+    })
+    $('.users').html(content);
+  });
+
+  //Emit connected
+  socket.emit('user_connected', playerInfo);
+
+  //Push enemy
+  /*socket.on('new_enemy', function(enemy){
+    console.log('new enemy connected');
+    enemiesController.addEnemy(enemy);
+  });*/
+
+}
+
 
 module.exports = {
   init: init
 }
-},{"./canvas":2,"./enemiesController":5,"./utils":19}],7:[function(require,module,exports){
+},{"./components/randomNameGenerator":4,"./core":5,"./enemiesController":6,"./utils":19}],8:[function(require,module,exports){
 'use strict';
 
 var pressedKeys = {};
@@ -465,7 +442,7 @@ var input = {
 };
 
 module.exports = input;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*
   Start endpoint
  */
@@ -483,7 +460,7 @@ $(document).ready(function(){
 
 });
   
-},{"./assetsLoader":1,"./gameConnection":6}],9:[function(require,module,exports){
+},{"./assetsLoader":1,"./gameConnection":7}],10:[function(require,module,exports){
 var Victor = require('victor');
 var utils = require('../utils');
 var sprite = require('../sprite');
@@ -607,7 +584,7 @@ birdEntity.prototype.update = function(dt){
 }
 
 module.exports = birdEntity;
-},{"../assetsLoader":1,"../sprite":18,"../utils":19,"./entity":12,"victor":20}],10:[function(require,module,exports){
+},{"../assetsLoader":1,"../sprite":18,"../utils":19,"./entity":13,"victor":20}],11:[function(require,module,exports){
 var Victor = require('victor');
 var sprite = require('../sprite');
 var utils = require('../utils');
@@ -706,7 +683,7 @@ enemyEntity.prototype.update = function(dt){
 }
 
 module.exports = enemyEntity;
-},{"../sprite":18,"../utils":19,"./entity":12,"victor":20}],11:[function(require,module,exports){
+},{"../sprite":18,"../utils":19,"./entity":13,"victor":20}],12:[function(require,module,exports){
 var entity = require('./entity');
 var textEntity = require('./textEntity');
 var birdEntity = require('./birdEntity');
@@ -720,7 +697,7 @@ module.exports = {
   birdEntity: birdEntity,
   enemyEntity: enemyEntity
 }
-},{"./birdEntity":9,"./enemyEntity":10,"./entity":12,"./particleEntity":13,"./textEntity":15}],12:[function(require,module,exports){
+},{"./birdEntity":10,"./enemyEntity":11,"./entity":13,"./particleEntity":14,"./textEntity":16}],13:[function(require,module,exports){
 var Victor = require('victor');
 
 function entity(opts){
@@ -740,7 +717,7 @@ entity.prototype.render = function(ctx){
 }
 
 module.exports = entity;
-},{"victor":20}],13:[function(require,module,exports){
+},{"victor":20}],14:[function(require,module,exports){
 var Victor = require('victor');
 var entity = require('./entity');
 var utils = require('../utils');
@@ -788,7 +765,7 @@ particleEntity.prototype.render = function(ctx){
 }
 
 module.exports = particleEntity;
-},{"../utils":19,"./entity":12,"victor":20}],14:[function(require,module,exports){
+},{"../utils":19,"./entity":13,"victor":20}],15:[function(require,module,exports){
 var entity = require('./entity');
 var sprite = require('../sprite');
 var assetsLoader = require('../assetsLoader');
@@ -845,7 +822,7 @@ Player.prototype.update = function(dt){
 }
 
 module.exports = Player;
-},{"../assetsLoader":1,"../sprite":18,"./entity":12,"victor":20}],15:[function(require,module,exports){
+},{"../assetsLoader":1,"../sprite":18,"./entity":13,"victor":20}],16:[function(require,module,exports){
 var Victor = require('victor');
 var entity = require('./entity');
 
@@ -891,7 +868,7 @@ textEntity.prototype.getTextHeight = function(){
 }
 
 module.exports = textEntity;
-},{"./entity":12,"victor":20}],16:[function(require,module,exports){
+},{"./entity":13,"victor":20}],17:[function(require,module,exports){
 var Player = require('./models/playerModel');
 var input = require('./input');
 
@@ -972,39 +949,7 @@ module.exports = {
     return player;
   }
 }
-},{"./input":7,"./models/playerModel":14}],17:[function(require,module,exports){
-window.SETTINGS = {
-  birdSpeed:{
-    name: 'Bird speed',
-    value: 80
-  },
-  birdSightRadius:{
-    name: 'Bird sight radius',
-    value: 100
-  },
-  birdAttractionRadius: {
-    name: 'Bird attraction radius - Green',
-    value: 130
-  },
-  birdAlignmentRadius: {
-    name: 'Bird alignment radius - Blue',
-    value: 24
-  },
-  birdRepulsionRadius: {
-    name: 'Bird repulsion radius - Red',
-    value: 11
-  },
-  birdSightRadius: {
-    name: 'Bird sight radius',
-    value: 300
-  },
-  debugging:{
-    name:'Debugging level',
-    value: 0,
-    max: 5
-  }
-}
-},{}],18:[function(require,module,exports){
+},{"./input":8,"./models/playerModel":15}],18:[function(require,module,exports){
 function Sprite(img){
 	this.img = img;
 	this.animations = {};
@@ -1100,6 +1045,12 @@ function randomRGBColor(){
   return color;
 }
 
+function randomId() {
+  var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+  var uniqid = randLetter + Date.now();
+  return uniqid;
+}
+
 function flipCoin() {
     return (Math.floor(Math.random() * 2) == 0);
 }
@@ -1118,30 +1069,30 @@ function arrayMean (a1, extractor) {
 };
 
 function kNearest(a1, lst, k, maxDist) {
-    'use strict';
-    var result = [], tempDist = [], idx = 0, worstIdx = -1, dist, agent;
+  'use strict';
+  var result = [], tempDist = [], idx = 0, worstIdx = -1, dist, agent;
 
-    while (idx < lst.length) {
-        agent = lst[idx];
-        if (a1 !== agent) {
-            dist = a1.pos.distance(agent.pos);
-            if (dist < maxDist) {
-                if (result.length < k) {
-                    result.push(agent);
-                    tempDist.push(dist);
-                    worstIdx = tempDist.indexOf(_.max(tempDist));
-                } else {
-                    if (dist < tempDist[worstIdx]) {
-                        tempDist[worstIdx] = dist;
-                        result[worstIdx] = agent;
-                        worstIdx = tempDist.indexOf(_.max(tempDist));
-                    }
-                }
-            }
-        }
+  while (idx < lst.length) {
+      agent = lst[idx];
+      if (a1 !== agent) {
+          dist = a1.pos.distance(agent.pos);
+          if (dist < maxDist) {
+              if (result.length < k) {
+                  result.push(agent);
+                  tempDist.push(dist);
+                  worstIdx = tempDist.indexOf(_.max(tempDist));
+              } else {
+                  if (dist < tempDist[worstIdx]) {
+                      tempDist[worstIdx] = dist;
+                      result[worstIdx] = agent;
+                      worstIdx = tempDist.indexOf(_.max(tempDist));
+                  }
+              }
+          }
+      }
 
-        idx += 1;
-    }
+      idx += 1;
+  }
 
     return result;
 };
@@ -1152,7 +1103,8 @@ module.exports = {
   randomRGBColor: randomRGBColor,
   flipCoin: flipCoin,
   arrayMean: arrayMean,
-  kNearest: kNearest
+  kNearest: kNearest,
+  randomId: randomId
 }
 },{}],20:[function(require,module,exports){
 exports = module.exports = Victor;
@@ -2204,4 +2156,4 @@ function degrees2radian (deg) {
 	return deg / degrees;
 }
 
-},{}]},{},[8]);
+},{}]},{},[9]);
