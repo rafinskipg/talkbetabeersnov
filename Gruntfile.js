@@ -145,16 +145,16 @@ module.exports = function (grunt) {
       ]
     },
 
-    // Mocha testing framework configuration options
-    mocha: {
-      all: {
+    mochaTest: {
+      test: {
         options: {
-          run: true,
-          urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
-        }
+          reporter: 'spec',
+          //captureFile: 'tests/results.txt', // Optionally capture the reporter output to a file
+          quiet: false // Optionally suppress output to standard out (defaults to false)
+        },
+        src: ['test/**/*.js']
       }
-    },
-
+    }, 
     // Add vendor prefixed styles
     autoprefixer: {
       options: {
@@ -396,21 +396,8 @@ module.exports = function (grunt) {
     grunt.task.run([target ? ('serve:' + target) : 'serve']);
   });
 
-  grunt.registerTask('test', function (target) {
-    if (target !== 'watch') {
-      grunt.task.run([
-        'clean:server',
-        'concurrent:test',
-        'autoprefixer'
-      ]);
-    }
-
-    grunt.task.run([
-      'connect:test',
-      'mocha'
-    ]);
-  });
-
+  grunt.registerTask('test', ['mochaTest']);
+  
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
