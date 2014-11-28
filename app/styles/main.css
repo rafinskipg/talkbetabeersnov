@@ -15,24 +15,6 @@ canvas{
   max-height: 100%;
 }
 
-/*
-body{
-  background: url('/images/betabeers1.png');
-}
-.users{
-  margin-top: 10%;
-}
-
-.about{
-  background: black;
-  color: white;
-  font-size: 20px;
-  margin-top: 20%;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-*/
 .waiting{
   position: fixed;
   width: 100%;

@@ -278,26 +278,6 @@ function update(dt, player){
 
   enemies = _.compact(enemies.map(function(enemy){
     if(enemy.alive){
-      //var playersNear = utils.kNearest(enemy, [player], 2, enemy.sightRadius);
-      var playersCollide = utils.kNearest(enemy, [player], 2, enemy.radius);
-      var avoiding = 0, meanX, meanY, dx, dy;
-
-      //Avoid near enemies
-      /*if(playersNear.length > 0){
-        meanX = utils.arrayMean(playersNear, function(b){return b.pos.x});
-        meanY = utils.arrayMean(playersNear, function(b){return b.pos.y});
-        dx = meanX - enemy.pos.x;
-        dy = meanY - enemy.pos.y;
-        avoiding = (Math.atan2(dx, dy) * 180 / Math.PI) - enemy.angle;
-        avoiding += 180;
-      }
-      enemy.angle += avoiding;*/
-
-      if(playersCollide.length > 0 ){
-        //enemy.alive = false;
-        //player.points += enemy.points;
-      }
-
       enemy.update(dt);
       return enemy;
     }
@@ -376,12 +356,7 @@ function init(){
 
   //Emit connected
   socket.emit('user_connected', playerInfo);
-
-  //Push enemy
-  /*socket.on('new_enemy', function(enemy){
-    console.log('new enemy connected');
-    enemiesController.addEnemy(enemy);
-  });*/
+  
 
 }
 

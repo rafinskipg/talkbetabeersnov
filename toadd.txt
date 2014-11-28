@@ -1,0 +1,54 @@
+---
+game connection
+//Push enemy
+socket.on('new_enemy', function(enemy){
+  console.log('new enemy connected');
+  enemiesController.addEnemy(enemy);
+});
+
+
+---
+enemies controller
+var playersNear = utils.kNearest(enemy, [player], 2, enemy.sightRadius);
+var avoiding = 0, meanX, meanY, dx, dy;
+     
+//Avoid near enemies
+if(playersNear.length > 0){
+  meanX = utils.arrayMean(playersNear, function(b){return b.pos.x});
+  meanY = utils.arrayMean(playersNear, function(b){return b.pos.y});
+  dx = meanX - enemy.pos.x;
+  dy = meanY - enemy.pos.y;
+  avoiding = (Math.atan2(dx, dy) * 180 / Math.PI) - enemy.angle;
+  avoiding += 180;
+}
+enemy.angle += avoiding;
+
+
+var playersCollide = utils.kNearest(enemy, [player], 2, enemy.radius);
+      
+
+if(playersCollide.length > 0 ){
+  enemy.alive = false;
+  player.points += enemy.points;
+}
+
+
+----
+
+css
+
+body{
+  background: url('/images/betabeers1.png');
+}
+.users{
+  margin-top: 10%;
+}
+
+.about{
+  background: black;
+  color: white;
+  font-size: 20px;
+  margin-top: 20%;
+  padding: 10px;
+  border-radius: 4px;
+}
